@@ -19,10 +19,14 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static class OperatorConstants {
     public static final int JoystickPort = 0;
+
+    // Axes
     public static final int JoystickTranslationAxis = 1;
     public static final int JoystickStrafeAxis = 0;
     public static final int JoystickRotationAxis = 2;
     public static final int JoystickSliderAxis = 3;
+
+    // Buttons
     public static final int JoystickRobotRelative = 12;
   }
 
@@ -51,32 +55,31 @@ public final class Constants {
 
     public static final double driveBaseRadius = Units.inchesToMeters(18.5);
 
+    // TODO: fix this. the larger the value is, the slower the max speed is.
     public static final double maxMetersPerSecond = 2;
 
+    // Swerve Modules: CAN IDs and offsets for the CANcoders.
+      // CANcoder offsets provided by Tuner X are scaled 0-1, must convert to radians
     // front left
     public static final int frontLeftDriveMotorId = 7;
     public static final int frontLeftRotationMotorId = 8;
     public static final int frontLeftCanCoderId = 12;
     public static final double frontLeftOffsetRad = 0.287842 * 2 * Math.PI;
-
     // front right
     public static final int frontRightDriveMotorId = 5;
     public static final int frontRightRotationMotorId = 6;
     public static final int frontRightCanCoderId = 11;
     public static final double frontRightOffsetRad = 0.617676 * 2 * Math.PI;
-
     // back left
     public static final int backLeftDriveMotorId = 3;
     public static final int backLeftRotationMotorId = 4;
     public static final int backLeftCanCoderId = 13;
     public static final double backLeftOffsetRad = 0.899658 * 2 * Math.PI;
-
     // back right
     public static final int backRightDriveMotorId = 1;
     public static final int backRightRotationMotorId = 2;
     public static final int backRightCanCoderId = 14;
     public static final double backRightOffsetRad = 0.496826 * 2 * Math.PI;
-
     public static final double kTeleDriveMaxAcceleration = 15;
     public static final double kTeleDriveMaxAngularAcceleration = 5;
   }

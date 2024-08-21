@@ -38,8 +38,8 @@ public class Robot extends LoggedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    // AdvantageKit logging setup...
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
-
     if (isReal()) {
         Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
         new PowerDistribution(15, ModuleType.kRev); // Enables power distribution logging
@@ -49,9 +49,9 @@ public class Robot extends LoggedRobot {
         Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
     }
-
     // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+    
   }
 
   /**

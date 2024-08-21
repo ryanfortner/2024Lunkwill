@@ -25,16 +25,19 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  // Create swerve subsystem
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+  // Create Joystick object
+    // Must be Joystick and not CommandJoystick,
+    // which lacks getRawButton functionality.
   private final static Joystick joystick =
       new Joystick(OperatorConstants.JoystickPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Gets x y and turning from joystick (lambda functions you can look into it)
+    // Send axes & buttons from joystick to SwerveJoystickCommand,
+      // which will govern the SwerveSubsystem
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCommand(
       swerveSubsystem, 
       () -> joystick.getRawAxis(OperatorConstants.JoystickTranslationAxis),

@@ -31,37 +31,39 @@ import frc.robot.commands.SwerveJoystickCommand;
 
 public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new SwerveSubsystem. */
+
+  // Create 4 SwerveModule objects using given constants.
   private final SwerveModule frontLeft = new SwerveModule(
     SwerveConstants.frontLeftDriveMotorId, 
     SwerveConstants.frontLeftRotationMotorId, 
     SwerveConstants.frontLeftCanCoderId, 
     SwerveConstants.frontLeftOffsetRad);
-
   private final SwerveModule frontRight = new SwerveModule(
     SwerveConstants.frontRightDriveMotorId, 
     SwerveConstants.frontRightRotationMotorId, 
     SwerveConstants.frontRightCanCoderId, 
     SwerveConstants.frontRightOffsetRad);
-
   private final SwerveModule backLeft = new SwerveModule(
     SwerveConstants.backLeftDriveMotorId, 
     SwerveConstants.backLeftRotationMotorId, 
     SwerveConstants.backLeftCanCoderId, 
     SwerveConstants.backLeftOffsetRad);
-
   private final SwerveModule backRight = new SwerveModule(
     SwerveConstants.backRightDriveMotorId, 
     SwerveConstants.backRightRotationMotorId, 
     SwerveConstants.backRightCanCoderId, 
     SwerveConstants.backRightOffsetRad);
 
+  // Create NavX object (gyro)
   private final AHRS navX;
 
+  // Create swerve drive odometry engine, used to track robot on field
   private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.SwerveConstants.kinematics, new Rotation2d(), getModulePositions());
 
   public SwerveSubsystem() {
-    navX = new AHRS(SPI.Port.kMXP);
 
+    // NavX may need an extra second to start...
+    navX = new AHRS(SPI.Port.kMXP);
     new Thread(() -> {
       try {
         Thread.sleep(1000);
