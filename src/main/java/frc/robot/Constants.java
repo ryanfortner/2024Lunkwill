@@ -28,6 +28,13 @@ public final class Constants {
 
     // Buttons
     public static final int JoystickRobotRelative = 12;
+    public static final int JoystickLoadNote = 11;
+    public static final int JoystickShootNote = 10;
+  }
+
+  public static class ShooterConstants {
+    public static final int driveMotorId = 16;
+    public static final int indexerMotorId = 15;
   }
 
   public static class SwerveConstants {

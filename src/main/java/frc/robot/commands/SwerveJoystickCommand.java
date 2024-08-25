@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -56,6 +57,7 @@ public class SwerveJoystickCommand extends Command {
 
     // Apply rate limits
     double sliderLimit = -((slider.getAsDouble() - 1) / 2);
+    if (sliderLimit < 0.2) sliderLimit = 0.2;
     xSpeed = forwardXSlewRateLimiter.calculate(xSpeed) * sliderLimit;
     ySpeed = forwardYSlewRateLimiter.calculate(ySpeed) * sliderLimit;
     rot = rotationSlewRateLimiter.calculate(rot) * sliderLimit;

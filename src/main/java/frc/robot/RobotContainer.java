@@ -4,18 +4,20 @@
 
 package frc.robot;
 
+
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.LoadNoteCommand;
+import frc.robot.commands.ShootNoteCommand;
 import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.subsystems.SwerveSubsystem;
-
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -27,15 +29,20 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // Create swerve subsystem
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  
+  private static final Shooter shooter = new Shooter(ShooterConstants.indexerMotorId, ShooterConstants.driveMotorId);
 
-  // Create Joystick object
-    // Must be Joystick and not CommandJoystick,
-    // which lacks getRawButton functionality.
+  /*
+   * Create Joystick object
+   * Must be Joystick and not CommandJoystick,
+   * which lacks getRawButton functionality
+   */
   private final static Joystick joystick =
       new Joystick(OperatorConstants.JoystickPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     // Send axes & buttons from joystick to SwerveJoystickCommand,
       // which will govern the SwerveSubsystem
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCommand(
@@ -46,6 +53,7 @@ public class RobotContainer {
       () -> joystick.getRawAxis(OperatorConstants.JoystickSliderAxis),
       () -> joystick.getRawButton(OperatorConstants.JoystickRobotRelative)
     ));
+
     configureBindings();
   }
 
@@ -59,6 +67,17 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+    /* LOAD NOTE */
+    /* for 5 sec @0.5x speed */
+    new JoystickButton(joystick, OperatorConstants.JoystickLoadNote)
+      .onTrue(new LoadNoteCommand(shooter, 0.5, 5));
+    
+    /* SHOOT NOTE */
+    /* for 5 sec, with indexer @0.5x speed */
+    new JoystickButton(joystick, OperatorConstants.JoystickShootNote)
+      .onTrue(new ShootNoteCommand(shooter, 0.5, 5));
+
   }
 
   /**
