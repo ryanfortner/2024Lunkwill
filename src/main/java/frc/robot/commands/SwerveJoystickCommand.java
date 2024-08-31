@@ -12,23 +12,23 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class SwerveJoystickCommand extends Command {
 
   private final SwerveSubsystem swerveSubsystem;
-  private final DoubleSupplier forwardX, forwardY, rotation, slider;
+  private final DoubleSupplier forwardX, forwardY, rotation;
   private final Supplier<Boolean> robotRelative;
   private final SlewRateLimiter forwardXSlewRateLimiter, forwardYSlewRateLimiter, rotationSlewRateLimiter;
 
   /** Creates a new SwerveJoystickCommand. */
-  public SwerveJoystickCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier forwardX, DoubleSupplier forwardY, DoubleSupplier rotation, DoubleSupplier slider, Supplier<Boolean> robotRelative) {
+  public SwerveJoystickCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier forwardX, DoubleSupplier forwardY, DoubleSupplier rotation, Supplier<Boolean> robotRelative) {
     this.swerveSubsystem = swerveSubsystem;
     this.forwardX = forwardX;
     this.forwardY = forwardY;
     this.rotation = rotation;
-    this.slider = slider;
     this.robotRelative = robotRelative;
 
     this.forwardXSlewRateLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAcceleration);
@@ -47,7 +47,7 @@ public class SwerveJoystickCommand extends Command {
   public void execute() {
     // get joystick input as x, y, and rotation
     double xSpeed = forwardX.getAsDouble();
-    double ySpeed = forwardY.getAsDouble();
+    double ySpeed = -forwardY.getAsDouble();
     double rot = rotation.getAsDouble();
 
     // Apply deadband
@@ -56,13 +56,23 @@ public class SwerveJoystickCommand extends Command {
     rot = Math.abs(rot) > 0.4 ? rot : 0.0;
 
     // Apply rate limits
-    double sliderLimit = -((slider.getAsDouble() - 1) / 2);
-    if (sliderLimit < 0.2) sliderLimit = 0.2;
-    xSpeed = forwardXSlewRateLimiter.calculate(xSpeed) * sliderLimit;
-    ySpeed = forwardYSlewRateLimiter.calculate(ySpeed) * sliderLimit;
-    rot = rotationSlewRateLimiter.calculate(rot) * sliderLimit;
+    // double sliderLimit = -((slider.getAsDouble() - 1) / 2);
+    // if (sliderLimit < 0.2) sliderLimit = 0.2;
+    // xSpeed = forwardXSlewRateLimiter.calculate(xSpeed) * sliderLimit;
+    // ySpeed = forwardYSlewRateLimiter.calculate(ySpeed) * sliderLimit;
+    // rot = rotationSlewRateLimiter.calculate(rot) * sliderLimit;
 
-    swerveSubsystem.drive(xSpeed, ySpeed, rot * 1.5, robotRelative.get());
+    xSpeed = forwardXSlewRateLimiter.calculate(xSpeed);
+    ySpeed = forwardYSlewRateLimiter.calculate(ySpeed);
+    rot = rotationSlewRateLimiter.calculate(rot);
+
+    if (robotRelative.get() && RobotContainer.fieldRelativeStatus) {
+      RobotContainer.fieldRelativeStatus = false;
+    } else if (robotRelative.get() && !RobotContainer.fieldRelativeStatus) {
+      RobotContainer.fieldRelativeStatus = true;
+    }
+
+    swerveSubsystem.drive(xSpeed, ySpeed, rot * 1.5, RobotContainer.fieldRelativeStatus);
 
     // // Create chassisSpeeds to set to states
     // ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, rot * 1.5);

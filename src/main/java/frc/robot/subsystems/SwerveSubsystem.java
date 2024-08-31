@@ -122,6 +122,10 @@ public class SwerveSubsystem extends SubsystemBase {
     return odometry.getPoseMeters();
   }
 
+  public AHRS getNavX() {
+    return navX;
+  }
+
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(getHeading(), getModulePositions(), pose);
   }

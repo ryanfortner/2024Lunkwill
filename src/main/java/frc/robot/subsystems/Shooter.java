@@ -20,6 +20,12 @@ public class Shooter extends SubsystemBase {
     driveMotor = new VictorSPX(driveMotorId);
   }
 
+  public void setBothMotorsSpeed(double speed) {
+    driveMotor.set(VictorSPXControlMode.PercentOutput, speed);
+    indexerMotor.set(VictorSPXControlMode.PercentOutput, speed);
+
+  }
+
   public void setDriveMotorSpeed(double speed) {
     driveMotor.set(VictorSPXControlMode.PercentOutput, speed);
   }

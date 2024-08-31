@@ -18,7 +18,8 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int JoystickPort = 0;
+    public static final int JoystickPort = 1;
+    public static final int XboxControllerPort = 0;
 
     // Axes
     public static final int JoystickTranslationAxis = 1;
@@ -63,7 +64,7 @@ public final class Constants {
     public static final double driveBaseRadius = Units.inchesToMeters(18.5);
 
     // TODO: fix this. the larger the value is, the slower the max speed is.
-    public static final double maxMetersPerSecond = 2;
+    public static final double maxMetersPerSecond = 5;
 
     // Swerve Modules: CAN IDs and offsets for the CANcoders.
       // CANcoder offsets provided by Tuner X are scaled 0-1, must convert to radians

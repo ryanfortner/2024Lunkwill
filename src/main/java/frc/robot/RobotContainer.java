@@ -8,12 +8,14 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.LoadNoteCommand;
+import frc.robot.commands.NoteControl;
 import frc.robot.commands.ShootNoteCommand;
 import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,8 +29,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+  public static boolean fieldRelativeStatus = true;
+
   // Create swerve subsystem
-  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private static final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   
   private static final Shooter shooter = new Shooter(ShooterConstants.indexerMotorId, ShooterConstants.driveMotorId);
 
@@ -40,6 +45,8 @@ public class RobotContainer {
   private final static Joystick joystick =
       new Joystick(OperatorConstants.JoystickPort);
 
+  private final static XboxController xboxController = new XboxController(OperatorConstants.XboxControllerPort);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -47,11 +54,17 @@ public class RobotContainer {
       // which will govern the SwerveSubsystem
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCommand(
       swerveSubsystem, 
-      () -> joystick.getRawAxis(OperatorConstants.JoystickTranslationAxis),
-      () -> joystick.getRawAxis(OperatorConstants.JoystickStrafeAxis), 
-      () -> joystick.getRawAxis(OperatorConstants.JoystickRotationAxis),
-      () -> joystick.getRawAxis(OperatorConstants.JoystickSliderAxis),
-      () -> joystick.getRawButton(OperatorConstants.JoystickRobotRelative)
+      () -> xboxController.getLeftY(),
+      () -> -xboxController.getLeftX(), 
+      () -> xboxController.getRightX(),
+      () -> xboxController.getXButtonPressed()
+    ));
+    
+    shooter.setDefaultCommand(new NoteControl(
+      shooter, 
+      () -> xboxController.getRightTriggerAxis(), 
+      () -> xboxController.getLeftTriggerAxis(),
+      () -> xboxController.getBButton()
     ));
 
     configureBindings();
@@ -68,15 +81,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    /* LOAD NOTE */
-    /* for 5 sec @0.5x speed */
-    new JoystickButton(joystick, OperatorConstants.JoystickLoadNote)
-      .onTrue(new LoadNoteCommand(shooter, 0.5, 5));
-    
-    /* SHOOT NOTE */
-    /* for 5 sec, with indexer @0.5x speed */
-    new JoystickButton(joystick, OperatorConstants.JoystickShootNote)
-      .onTrue(new ShootNoteCommand(shooter, 0.5, 5));
+    /* WINDOW: RESET NAVX HEADING */
+    new JoystickButton(xboxController, 7).onTrue(new InstantCommand(() -> swerveSubsystem.getNavX().zeroYaw()));
 
   }
 

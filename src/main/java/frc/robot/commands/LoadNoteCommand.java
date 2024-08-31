@@ -19,40 +19,38 @@ public class LoadNoteCommand extends Command {
 
   private final Shooter shooter;
 
-  private final double speed, duration;
+  private final double speed;
 
   /** Creates a new LoadNoteCommand. */
-  public LoadNoteCommand(Shooter shooter, double speed, double duration) {
+  public LoadNoteCommand(Shooter shooter, double speed) {
     this.shooter = shooter;
 
     this.speed = speed;
-    this.duration = duration;
 
     addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    timer.reset();
-    timer.start();
-    shooter.setIndexerMotorSpeed(speed);
-  }
+  public void initialize() {  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    System.out.println("LOAD NOTE");
+    shooter.setDriveMotorSpeed(-speed);
+    shooter.setIndexerMotorSpeed(-speed);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopAllMotors();
-    timer.stop();
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() >= duration;
+    return false;
   }
 }
