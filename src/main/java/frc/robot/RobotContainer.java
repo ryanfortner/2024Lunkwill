@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.NoteControl;
@@ -35,14 +34,6 @@ public class RobotContainer {
   
   private static final Shooter shooter = new Shooter(ShooterConstants.indexerMotorId, ShooterConstants.driveMotorId);
 
-  /*
-   * Create Joystick object
-   * Must be Joystick and not CommandJoystick,
-   * which lacks getRawButton functionality
-   */
-  private final static Joystick joystick =
-      new Joystick(OperatorConstants.JoystickPort);
-
   private final static XboxController xboxController = new XboxController(OperatorConstants.XboxControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -55,7 +46,7 @@ public class RobotContainer {
       () -> xboxController.getLeftY(),
       () -> -xboxController.getLeftX(), 
       () -> xboxController.getRightX(),
-      () -> xboxController.getXButtonPressed()
+      () -> xboxController.getXButton()
     ));
     
     shooter.setDefaultCommand(new NoteControl(

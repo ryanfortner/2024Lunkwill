@@ -143,7 +143,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getHeading() {
     // still not sure why I had to add the +90... needed to properly orient
       // when field-relative
-    return Rotation2d.fromDegrees(-navX.getYaw() + 90);
+    // return Rotation2d.fromDegrees(-navX.getYaw() + 90);
+    return Rotation2d.fromDegrees(-navX.getYaw());
   }
 
   public SwerveModulePosition[] getModulePositions() {
@@ -228,6 +229,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("NavX Angle", navX.getAngle());
     
+    SmartDashboard.putNumber("YAW", navX.getYaw());
+
+    SmartDashboard.putNumber("HEADING", getHeading().getDegrees());
+
     Logger.recordOutput("Real States", getStates());
     Logger.recordOutput("Pose", getPose());
   }
